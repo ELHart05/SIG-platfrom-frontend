@@ -66,6 +66,9 @@ export default function ReportIssue() {
                 {...viewState}
                 onMove={evt => setViewState(evt.viewState)}
                 onClick={evt => handleMapClick(evt)}
+                style={{
+                    width: "100%"
+                }}
                 id="user-report-map"
                 mapStyle='mapbox://styles/mapbox/dark-v11'
             >

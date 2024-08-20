@@ -19,8 +19,8 @@ function App() {
         </Route>
         <Route path="/auth" element={<layouts.AuthLayout />}>
           <Route index path="/auth" element={<Navigate to={"login"} />} />
-          <Route path="login" element={<h1>login</h1>} />
-          <Route path="register" element={<h1>register</h1>} />
+          <Route path="login" element={<pages.Login />} />
+          <Route path="register" element={<pages.Register />} />
         </Route>
         <Route path="*" element={<pages.Error />} />
       </Route>

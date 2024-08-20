@@ -81,6 +81,9 @@ export default function ClientReports() {
                 onMove={evt => setViewState(evt.viewState)}
                 id="user-report-map"
                 mapStyle='mapbox://styles/mapbox/dark-v11'
+                style={{
+                    width: "100%"
+                }}
             >
                 {
                     filteredReports.map((report) => (

@@ -18,11 +18,11 @@ export default function MenuDrawer({
 
     const authPages = [
         {
-            name: 'Login',
+            name: 'Se connecter',
             link: '/auth/login'
         },
         {
-            name: 'Registrer',
+            name: 'Registre',
             link: '/auth/register'
         }
     ]
@@ -63,8 +63,8 @@ export default function MenuDrawer({
                             {
                                 page.map((item, index) => (
                                     <ListItem key={index} disablePadding>
-                                        <ListItemButton>
-                                            <Link to={item.link}>
+                                        <ListItemButton className='w-full'>
+                                            <Link to={item.link} className='w-full'>
                                                 <ListItemText primary={item.name} />
                                             </Link>
                                         </ListItemButton>
