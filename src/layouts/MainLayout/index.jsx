@@ -31,7 +31,7 @@ function MainLayout() {
             <MenuDrawer open={open} setOpen={setOpen} />
             <Outlet />
             <footer className="bg-blue-500 text-white p-4">
-                <p className="text-center text-xl">© {new Date().getFullYear()} HR Technology. All rights reserved.</p>
+                <p className="text-center text-xl">© {new Date().getFullYear()} HR Technology. Tous droits réservés.</p>
             </footer>
         </div>
     );

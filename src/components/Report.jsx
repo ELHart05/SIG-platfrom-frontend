@@ -21,7 +21,7 @@ export default function Report({
                 <p>Etat: <span className="font-bold" style={{color: STATUS_COLORS[status]}}>{getReportStatus(status)}</span></p>
             </div>
             <div className="w-1/2 overflow-hidden h-[320px] flex items-center justify-center border border-l border-l-black flex-1" style={{
-                backgroundImage: `url(${!!photos?.length ? photos[0] : '/images/no-image.png'})`,
+                backgroundImage: `url(${!!photos?.length ? photos[0] : '/images/warning.png'})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
