@@ -1,10 +1,10 @@
 //client
-import ReportIssue from "./report"
-import ClientReports from "./my-reports"
+import ReportIssue from "./client/report"
+import ClientReports from "./client/my-reports"
 
 //admin
-import AdminStats from "./stats"
-import AdminReportList from "./reports-list"
+import AdminStats from "./admin/stats"
+import AdminReportList from "./admin/reports-list"
 
 //error
 import Error from "./error"

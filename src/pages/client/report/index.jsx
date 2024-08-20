@@ -4,15 +4,16 @@ import { getGeocode } from 'use-places-autocomplete';
 import { useState } from "react";
 import { useMemo } from "react";
 import { FilePond } from "react-filepond";
-import errorManager from "../../utils/errorManager";
-import { Link } from "react-router-dom";
+import errorManager from "../../../utils/errorManager";
 import { useForm } from "react-hook-form";
-import AutocompleteInput from "../../components/AutoCompleteInput";
+import AutocompleteInput from "../../../components/AutoCompleteInput";
 import { useLoadScript } from "@react-google-maps/api";
-import { LIBRARIES, INITIAL_CENTER, ANOMALIES } from "../../../constants";
+import { LIBRARIES, INITIAL_CENTER, ANOMALIES } from "../../../../constants";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import Spinner from "react-spinner-material";
+import API from "../../../utils/api-client";
+import { useNavigate } from "react-router-dom";
 
 export default function ReportIssue() {
 
@@ -24,7 +25,7 @@ export default function ReportIssue() {
                 label: ''
             },
             description: '',
-            anomalie: 10,
+            anomalie: 'Trous dans la voirie',
             photos: [],
             user: {
                 first_name: '',
@@ -55,6 +56,8 @@ export default function ReportIssue() {
             label: result[0].formatted_address
         })
     }
+
+    const navigate = useNavigate();
 
     const ReportMap = useMemo(() => {
         return (
@@ -107,14 +110,14 @@ export default function ReportIssue() {
     }
 
     function resizeHandler () {
+        const el = document.getElementById('user-report-map');
+        if (!el) return;
         if (window.innerWidth <= 1024) {
-            document.getElementById('user-report-map').style.position = 'static';
-            document.getElementById('user-report-map').style.height = '500px';
-            document.getElementById('user-report-map').style.width = '100%';
+            el.style.height = '500px';
+            el.style.width = '100%';
         } else {
-            document.getElementById('user-report-map').style.position = 'fixed';
-            document.getElementById('user-report-map').style.height = '100vh';
-            document.getElementById('user-report-map').style.width = '49%';
+            el.style.height = '100vh';
+            el.style.width = '100%';
         }
     }
     useEffect(() => {
@@ -140,11 +143,35 @@ export default function ReportIssue() {
         })
     }
 
-    const submitData = (data) => {
+    const submitData = async (data) => {
         try {
             setIsSubmitting(true);
-            console.log(data);
+            const formData = new FormData();
+
+            formData.append('location[longitude]', data.location.longitude);
+            formData.append('location[latitude]', data.location.latitude);
+            formData.append('location[label]', data.location.label);
+            formData.append('description', data.description);
+            formData.append('anomalie', data.anomalie);
+            data.photos.forEach((photo, index) => {
+                formData.append(`photos[${index}]`, photo);
+            });
+            formData.append('user[first_name]', data.user.first_name);
+            formData.append('user[last_name]', data.user.last_name);
+            formData.append('user[email]', data.user.email);
+            formData.append('user[phone]', data.user.phone);
+
+            await API.post('/reports', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
             toast.success('Votre signalement a été envoyé avec succès');
+
+            setTimeout(() => {
+                navigate('/my-reports');
+            }, 1000);
         } catch (error) {
             errorManager(error);
         } finally {
@@ -155,12 +182,6 @@ export default function ReportIssue() {
     return (
         <div className="flex items-start justify-center flex-col-reverse lg:flex-row gap-x-10 relative flex-1">
             <div className="flex flex-col items-start justify-start gap-6 my-10 w-full lg:w-1/2">
-                <div className="flex items-center gap-3 flex-col xl:flex-row justify-center xl:justify-between flex-wrap w-full">
-                    <h1 className="text-3xl font-bold text-center">Signalement une Anomalies</h1>
-                    <Link className="p-2 font-bold text-white bg-blue-500 rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black" to='/my-reports'>
-                        Mes signalements
-                    </Link>
-                </div>
                 <div>
                     <p className="max-lg:text-center">Formulaires pour la description des anomalies avec
                     possibilité d'ajouter des photos et la localisation GPS.</p>
@@ -221,11 +242,11 @@ export default function ReportIssue() {
                                     inputProps={register('anomalie', {
                                         required: 'Ce champ est requis'
                                     })}
-                                    defaultValue={10}
+                                    defaultValue={"Trous dans la voirie"}
                                 >
                                     {
-                                        ANOMALIES.map(({ title, value }, index) => (
-                                            <MenuItem key={index} value={value}>{title}</MenuItem>
+                                        ANOMALIES.map((el, index) => (
+                                            <MenuItem key={index} value={el}>{el}</MenuItem>
                                         ))
                                     }
                                 </TextField>
@@ -375,7 +396,7 @@ export default function ReportIssue() {
                     </form>
                 </div>
             </div>
-            <div className="w-full lg:w-1/2 overflow-hidden">
+            <div className="w-full lg:w-1/2 lg:sticky lg:top-0">
                 {ReportMap}
             </div>
         </div>

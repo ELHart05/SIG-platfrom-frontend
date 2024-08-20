@@ -12,6 +12,7 @@ import Slide from '@mui/material/Slide';
 import { Box, Typography } from '@mui/material';
 import { STATUS_COLORS } from '../../constants';
 import { getReportStatus } from '../utils/getReportStatus';
+import { DateTime } from 'luxon';
 
 const Transition = React.forwardRef(function Transition(
   props,
@@ -57,10 +58,10 @@ export default function FullScreenDialog({
       </AppBar>
       <List>
         {
-          activeReport.history.map((e, i) => (
+          activeReport.histories.map((e, i) => (
             <React.Fragment key={i}>
               <ListItemButton className='flex flex-col w-full items-start'>
-                <ListItemText primary={e.date} />
+                <ListItemText primary={DateTime.fromISO(e?.created_at).toFormat('dd/MM/yyyy HH:mm:ss')} />
                 <Box className="flex flex-col gap-2">
                   <Box>
                     {
@@ -71,11 +72,11 @@ export default function FullScreenDialog({
                   </Box>
                   <Box>
                     {
-                      e?.status?.from != e?.status?.to
+                      e?.status_from != e?.status_to
                       ?
-                      <p className="font-bold">Etat mis à jour de <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status?.from]}}>{getReportStatus(e?.status?.from)}</span> vers <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status?.to]}}>{getReportStatus(e?.status?.to)}</span></p>
+                      <p className="font-bold">Etat mis à jour de <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status_from]}}>{getReportStatus(e?.status_from)}</span> vers <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status_to]}}>{getReportStatus(e?.status_to)}</span></p>
                       :
-                      <p className="font-bold">Etat courant <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status?.from]}}>{getReportStatus(e?.status?.from)}</span></p>
+                      <p className="font-bold">Etat courant <span className="font-bold contents" style={{color: STATUS_COLORS[e?.status_from]}}>{getReportStatus(e?.status_from)}</span></p>
                     }
                   </Box>
                 </Box>

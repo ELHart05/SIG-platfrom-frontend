@@ -64,7 +64,6 @@ const AutocompleteInput = ({ _address, setAddress, setValue }) => {
                         width: '100%',
                         boxShadow: 'md',
                         borderRadius: 'md',
-                        overflow: 'auto',
                         maxHeight: '240px',
                         marginTop: '1',
                         backgroundColor: 'white',

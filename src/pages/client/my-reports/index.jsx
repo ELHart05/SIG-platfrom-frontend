@@ -1,26 +1,66 @@
+import API from "../../../utils/api-client";
 import { InputLabel, TextField } from "@mui/material";
 import Map, { FullscreenControl, Marker, NavigationControl } from 'react-map-gl';
-import { useState } from "react";
-import { useMemo } from "react";
-import errorManager from "../../utils/errorManager";
-import { Link } from "react-router-dom";
-import { INITIAL_CENTER, REPORTS, STATUS_COLORS, STATUS_LIST } from "../../../constants";
-import { useEffect } from "react";
-import Report from "../../components/Report";
+import { useState, useEffect, useMemo } from "react";
+import { INITIAL_CENTER, STATUS_COLORS, STATUS_LIST } from "../../../../constants";
+import { getReportStatus } from "../../../utils/getReportStatus";
+import Report from "../../../components/Report";
 import ModalImage from "react-modal-image";
-import { getReportStatus } from "../../utils/getReportStatus";
 import Spinner from "react-spinner-material";
+import LoadingWrapper from "../../../components/LoadingWrapper";
+import errorManager from "../../../utils/errorManager";
+import { DateTime } from "luxon";
 
 export default function ClientReports() {
 
-    const [activeReport, setActiveReport] = useState(REPORTS[0]);
-    const [filteredReports, setFilteredReports] = useState(REPORTS);
+    const [reports, setReports] = useState([]);
+    const [filteredReports, setFilteredReports] = useState([]);
+    const [activeReport, setActiveReport] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [current_page, setCurrentPage] = useState(1);
+    const [pageProps, setPageProps] = useState({
+        total: 0,
+        pagePointers: {
+            next_page_url: null,
+            prev_page_url: null
+        }
+    });
+
+    useEffect(() => {
+        const getReportList = async () => {
+            try {
+                setIsLoading(true);
+                const response = await API.get('client/reports/1?page='+(current_page));
+                const data = response?.data?.data.map((e) => ({
+                    ...e,
+                    photos: JSON.parse(e.photos)
+                }))
+                const pageProps = {
+                    total: Math.ceil(response?.data?.total / response?.data?.per_page),
+                    pagePointers: {
+                        next_page_url: response?.data?.next_page_url,
+                        prev_page_url: response?.data?.prev_page_url
+                    }
+                }
+                setPageProps(pageProps);
+                setFilteredReports(data);
+                setReports(data);
+                setActiveReport(data[0]);
+            } catch (error) {
+                errorManager(error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        getReportList();
+    }, [current_page]);
 
     const selectReport = (id) => {
-        setActiveReport(REPORTS.find(report => report.id == id));
+        const activeR = reports.find(report => report.id == id);
+        setActiveReport(activeR);
         setViewState({
-            longitude: activeReport.location.longitude,
-            latitude: activeReport.location.latitude,
+            longitude: activeR?.location?.longitude,
+            latitude: activeR?.location?.latitude,
         })
     }
 
@@ -51,15 +91,17 @@ export default function ClientReports() {
                 <FullscreenControl />
             </Map>
         )
-    }, [viewState, activeReport.location, filteredReports, search])
+    }, [viewState, activeReport?.location, filteredReports, search])
 
     function resizeHandler () {
+        const el = document.getElementById('user-report-map');
+        if (!el) return;
         if (window.innerWidth <= 1024) {
-            document.getElementById('user-report-map').style.height = '500px';
-            document.getElementById('user-report-map').style.width = '100%';
+            el.style.height = '500px';
+            el.style.width = '100%';
         } else {
-            document.getElementById('user-report-map').style.height = '50vh';
-            document.getElementById('user-report-map').style.width = '100%';
+            el.style.height = '50vh';
+            el.style.width = '100%';
         }
     }
     useEffect(() => {
@@ -75,9 +117,9 @@ export default function ClientReports() {
             setIsSubmitting(true);
             if (!preventUpdateState) {
                 setSearch(value);
-                setFilteredReports(REPORTS.filter(report => report.location.label.toLowerCase().includes(value.toLowerCase())))
+                setFilteredReports(reports.filter(report => report.location.label.toLowerCase().includes(value.toLowerCase())))
             } else {
-                setFilteredReports(REPORTS.filter(report => report.status.toLowerCase().includes(value.toLowerCase())))
+                setFilteredReports(reports.filter(report => report.status.toLowerCase().includes(value.toLowerCase())))
             }
         } catch (error) {
             errorManager(error);
@@ -87,15 +129,9 @@ export default function ClientReports() {
     }
 
     return (
-        <>
+        <LoadingWrapper isLoading={isLoading}>
             <div className="flex items-start justify-center flex-col lg:flex-row gap-x-10 relative flex-1">
                 <div className="flex flex-col items-start justify-start gap-6 my-10 w-full lg:w-1/2">
-                    <div className="flex items-center gap-3 flex-col xl:flex-row justify-center xl:justify-between flex-wrap w-full">
-                        <h1 className="text-3xl font-bold text-center">Mes signalements</h1>
-                        <Link className="p-2 font-bold text-white bg-blue-500 rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black" to='/report'>
-                            Signaler une anomalie
-                        </Link>
-                    </div>
                     <div>
                         <p className="max-lg:text-center">
                             Tous les signalements que vous avez effectués sont affichés ci-dessous. Vous pouvez consulter les détails de chaque signalement en cliquant sur l'un des signalements.
@@ -109,7 +145,7 @@ export default function ClientReports() {
                                     <div className="flex items-center justify-center gap-4">
                                         {
                                             ['', ...STATUS_LIST].map((status) => (
-                                                <button key={status} onClick={() => searchReport(status, true)} className={`p-2 rounded ${(!!!filteredReports.length ? !!!status : !!!status ? (filteredReports.length === REPORTS.length) : filteredReports.every((e) => e.status.includes(status))) ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent transition-all'}`}>
+                                                <button key={status} onClick={() => searchReport(status, true)} className={`p-2 rounded ${(!!!filteredReports?.length ? !!!status : !!!status ? (filteredReports.length === reports.length) : filteredReports.every((e) => e.status.includes(status))) ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent transition-all'}`}>
                                                     {(!!!status) ?  'Tous' : getReportStatus(status)}
                                                 </button>
                                             ))
@@ -147,6 +183,13 @@ export default function ClientReports() {
                             }
                         </div>
                     </div>
+                    <div className="w-full flex items-center justify-end py-2">
+                        <div className="flex items-center gap-2 w-fit">
+                            <button onClick={() => (((!!pageProps?.pagePointers?.prev_page_url) || !isLoading) && setCurrentPage((prev) => (prev - 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.prev_page_url} className={`${!!!pageProps?.pagePointers?.prev_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent rounded transition-all`}>{"<"}</button>
+                            <span>{current_page}/{pageProps.total}</span>
+                            <button onClick={() => (((!!pageProps?.pagePointers?.next_page_url) || !isLoading) && setCurrentPage((prev) => (prev + 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.next_page_url} className={`${!!!pageProps?.pagePointers?.next_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent rounded transition-all`}>{">"}</button>
+                        </div>
+                    </div>
                 </div>
                 <div className="w-full flex flex-col items-center lg:w-1/2 sticky">
                     <div className="min-h-[50vh] w-full">
@@ -158,15 +201,15 @@ export default function ClientReports() {
                                 <h2 className="text-2xl font-bold text-center">Ma signalement</h2>
                             </div>
                             <div className="space-y-3">
-                                <h3 className="text-xl font-bold">{activeReport.location.label} <span className="text-base font-normal">({activeReport.anomalie})</span></h3>
-                                <p className="text-lg line-clamp-6">{activeReport.description}</p>
-                                <p className="font-bold">Date: <span className="font-normal">{activeReport.date}</span></p>
-                                <p className="font-bold">Etat: <span className="font-bold" style={{color: STATUS_COLORS[activeReport.status]}}>{getReportStatus(activeReport.status)}</span></p>
-                                <p><span className="font-bold">Clarification: </span>{(!!activeReport.clarification) ? activeReport.clarification : 'Pas de clarification pour le moment!'}</p>
+                                <h3 className="text-xl font-bold">{activeReport?.location.label} <span className="text-base font-normal">({activeReport?.anomalie})</span></h3>
+                                <p className="text-lg line-clamp-6">{activeReport?.description}</p>
+                                <p className="font-bold">Date: <span className="font-normal">{DateTime.fromISO(activeReport?.created_at).toFormat('dd/MM/yyyy HH:mm:ss')}</span></p>
+                                <p className="font-bold">Etat: <span className="font-bold" style={{color: STATUS_COLORS[activeReport?.status]}}>{getReportStatus(activeReport?.status)}</span></p>
+                                <p><span className="font-bold">Clarification: </span>{(!!activeReport?.clarification) ? activeReport?.clarification : 'Pas de clarification pour le moment!'}</p>
                             </div>
                             <div>
                                 {
-                                    activeReport.photos.length > 0 ? (
+                                    activeReport?.photos.length > 0 ? (
                                         <div className="flex items-center gap-2 overflow-x-scroll">
                                             {
                                                 activeReport?.photos?.map((photo, index) => (
@@ -195,6 +238,6 @@ export default function ClientReports() {
                     </div>
                 </div>
             </div>
-        </>
+        </LoadingWrapper>
     )
 }
