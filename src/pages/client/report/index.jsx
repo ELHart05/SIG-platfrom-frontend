@@ -203,7 +203,7 @@ export default function ReportIssue() {
                                         setValue={setValue}
                                     />
                                 }
-                                <button type="button" className="p-2 font-bold h-[45px] text-white bg-blue-500 transition-all hover:bg-white flex items-center justify-center border border-transparent hover:text-blue-500 hover:border-black rounded" onClick={locateUser}>
+                                <button type="button" className="p-2 font-bold h-[45px] text-white bg-greener transition-all hover:bg-white flex items-center justify-center border border-transparent hover:text-greener hover:border-black rounded" onClick={locateUser}>
                                     {(locationLoading) ? <Spinner style={{height: "24px", width: "24px"}} color='white' /> : "Localiser"}
                                 </button>
                             </div>
@@ -392,7 +392,7 @@ export default function ReportIssue() {
                             </div>
                         </div>
                         <div className="w-full max-w-[120px]">
-                            <button type="submit" className="w-full p-2 font-bold text-white bg-blue-500 flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black">
+                            <button type="submit" className="w-full p-2 font-bold text-white bg-greener flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-greener hover:border-black">
                                 {(isSubmitting) ? <Spinner style={{height: "24px", width: "24px"}} color='white' /> : "Envoyer"}
                             </button>
                         </div>

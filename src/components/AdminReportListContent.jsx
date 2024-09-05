@@ -148,7 +148,7 @@ function AdminReportListContent({ setCurrentPage, activeReport, setActiveReport,
                                 <div className="flex items-center justify-center gap-4">
                                     {
                                         ['', ...STATUS_LIST].map((status) => (
-                                            <button key={status} onClick={() => searchReport(status, true)} className={`p-2 rounded ${(!!!filteredReports.length ? !!!status : !!!status ? (filteredReports.length === reports.length) : filteredReports.every((e) => e.status.includes(status))) ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent transition-all'}`}>
+                                            <button key={status} onClick={() => searchReport(status, true)} className={`p-2 rounded ${(!!!filteredReports.length ? !!!status : !!!status ? (filteredReports.length === reports.length) : filteredReports.every((e) => e.status.includes(status))) ? 'bg-greener text-white' : 'bg-white text-greener border border-greener hover:bg-greener hover:text-white hover:border-transparent transition-all'}`}>
                                                 {(!!!status) ?  'Tous' : getReportStatus(status)}
                                             </button>
                                         ))
@@ -188,9 +188,9 @@ function AdminReportListContent({ setCurrentPage, activeReport, setActiveReport,
                 </div>
                 <div className="w-full flex items-center justify-end py-2">
                     <div className="flex items-center gap-2 w-fit">
-                        <button onClick={() => (((!!pageProps?.pagePointers?.prev_page_url) || !isLoading) && setCurrentPage((prev) => (prev - 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.prev_page_url} className={`${!!!pageProps?.pagePointers?.prev_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent rounded transition-all`}>{"<"}</button>
+                        <button onClick={() => (((!!pageProps?.pagePointers?.prev_page_url) || !isLoading) && setCurrentPage((prev) => (prev - 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.prev_page_url} className={`${!!!pageProps?.pagePointers?.prev_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-greener border border-greener hover:bg-greener hover:text-white hover:border-transparent rounded transition-all`}>{"<"}</button>
                         <span>{current_page}/{pageProps.total}</span>
-                        <button onClick={() => (((!!pageProps?.pagePointers?.next_page_url) || !isLoading) && setCurrentPage((prev) => (prev + 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.next_page_url} className={`${!!!pageProps?.pagePointers?.next_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white hover:border-transparent rounded transition-all`}>{">"}</button>
+                        <button onClick={() => (((!!pageProps?.pagePointers?.next_page_url) || !isLoading) && setCurrentPage((prev) => (prev + 1)))} disabled={isLoading || !!!pageProps?.pagePointers?.next_page_url} className={`${!!!pageProps?.pagePointers?.next_page_url && 'pointer-events-none opacity-20'} py-1 px-4 text-2xl bg-white text-greener border border-greener hover:bg-greener hover:text-white hover:border-transparent rounded transition-all`}>{">"}</button>
                     </div>
                 </div>
             </div>
@@ -275,7 +275,7 @@ function AdminReportListContent({ setCurrentPage, activeReport, setActiveReport,
                     </div>
                 </div>
                 <div className="w-full flex justify-start pl-4 mb-4">
-                    <button className="w-full p-2 font-bold max-w-[140px] text-white bg-blue-500 flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black">
+                    <button className="w-full p-2 font-bold max-w-[140px] text-white bg-greener flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-greener hover:border-black">
                         {(isSubmitting) ? <Spinner style={{height: "24px", width: "24px"}} color='white' /> : "Sauvegarder"}
                     </button>
                 </div>

@@ -7,7 +7,7 @@ export default function Error() {
             <p className="text-lg text-gray-600 mb-6">Oups! Quelque chose s'est mal passé.</p>
             <Link
                 to='/'
-                className="w-full p-2 max-w-[200px] font-bold text-white bg-blue-500 flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black"
+                className="w-full p-2 max-w-[200px] font-bold text-white bg-greener flex items-center justify-center rounded transition-all hover:bg-white border border-transparent hover:text-greener hover:border-black"
             >
                 Retour à l'accueil
             </Link>

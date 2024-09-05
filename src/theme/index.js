@@ -2,6 +2,11 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
     palette: {
+        greener: "#4ecdc4",
+        "darker-green": "#43b1a9",
+        "oranger": "#ed5565",
+        "very-dark-gray": "#2b2b2b",
+        "grayer": "#d6d9dc"
     },
     typography: {
         fontFamily: ['Poppins'].join(',')

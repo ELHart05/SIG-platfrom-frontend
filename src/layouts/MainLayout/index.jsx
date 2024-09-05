@@ -12,7 +12,7 @@ function MainLayout() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <nav className="bg-blue-500 text-white px-10 py-4 flex w-full items-center justify-between">
+            <nav className="bg-greener text-white px-10 py-4 flex w-full items-center justify-between">
                 <ul className="flex items-center w-full">
                     <li>
                         <Link to="/report" className="text-3xl font-bold relative z-[100000000000]">SIG</Link>
@@ -30,7 +30,7 @@ function MainLayout() {
             </nav>
             <MenuDrawer open={open} setOpen={setOpen} />
             <Outlet />
-            <footer className="bg-blue-500 text-white p-4">
+            <footer className="bg-greener text-white p-4">
                 <p className="text-center text-xl">© {new Date().getFullYear()} HR Technology. Tous droits réservés.</p>
             </footer>
         </div>

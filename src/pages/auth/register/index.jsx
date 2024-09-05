@@ -126,7 +126,7 @@ const RegisterPage = () => {
                             })
                         }
                     />
-                    <Button onClick={() => setIsPasswordVisible((prev) => !prev)} className="w-5 h-11 right-0 absolute">
+                    <Button  onClick={() => setIsPasswordVisible((prev) => !prev)} className="w-5 h-11 right-0 absolute">
                         {
                             !!isPasswordVisible ? <VisibilityIcon color="action"  /> : <VisibilityOffIcon color="action" />
                         }
@@ -145,6 +145,12 @@ const RegisterPage = () => {
                         fullWidth
                         type="submit"
                         className="text-base font-bold"
+                        sx={{
+                            backgroundColor: 'greener',
+                            '&:hover': {
+                                backgroundColor: 'oranger',
+                            }
+                        }}
                     >
                         {isLoading ? <CircularProgress color="inherit" size="1.4rem" /> : "Registre"}
                     </Button>

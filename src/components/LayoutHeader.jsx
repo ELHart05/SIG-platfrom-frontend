@@ -13,7 +13,7 @@ function LayoutHeader() {
             <h1 className="text-3xl font-bold text-center">{title}</h1>
             {
                 links.map(({to, text}) => (
-                    <Link key={to} className="p-2 font-bold text-white bg-blue-500 rounded transition-all hover:bg-white border border-transparent hover:text-blue-500 hover:border-black" to={to}>
+                    <Link key={to} className="p-2 font-bold text-white bg-greener rounded transition-all hover:bg-white border border-transparent hover:text-greener hover:border-black" to={to}>
                         {text}
                     </Link>
                 ))

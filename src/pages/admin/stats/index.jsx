@@ -83,6 +83,7 @@ export default function AdminStats() {
                             options={{
                                 xaxis: {
                                     categories: (stats?.reports_per_month ?? [])?.map((e) => e.month),
+                                    colors: ['#4ecdc4', "#ed5565", "#43b1a9"],
                                 },
                             }}
                             series={[{
@@ -102,6 +103,7 @@ export default function AdminStats() {
                             options={{
                                 ...donutChartOptions,
                                 labels: (stats?.top_users ?? [])?.map((e) => e.full_name),
+                                colors: ['#4ecdc4', "#ed5565", "#43b1a9"],
                             }}
                             series={(stats?.top_users ?? [])?.map((e) => e.report_count)}
                             type="donut"
@@ -119,6 +121,7 @@ export default function AdminStats() {
                             options={{
                                 ...pieChartOptions,
                                 labels: (stats?.anomalie_counts ?? [])?.map((e) => e.anomalie),
+                                colors: ['#4ecdc4', "#ed5565", "#43b1a9"],
                             }}
                             series={(stats?.anomalie_counts ?? [])?.map((e) => e.count)}
                             type="pie"
@@ -136,6 +139,7 @@ export default function AdminStats() {
                                 xaxis: {
                                     categories: (stats?.status_counts ?? [])?.map((e) => getReportStatus(e.status))
                                 },
+                                colors: ['#4ecdc4', "#ed5565", "#43b1a9"],
                             }}
                             series={[{
                                 name: 'Total',

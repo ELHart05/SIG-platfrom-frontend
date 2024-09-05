@@ -50,7 +50,7 @@ export default function MenuDrawer({
     ]
 
     const DrawerList = (
-        <Box className="bg-blue-500 flex-1 h-auto !text-white border-transparent" sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+        <Box className="bg-greener flex-1 h-auto !text-white border-transparent" sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
             {
                 [
                     adminPages,

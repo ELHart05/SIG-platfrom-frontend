@@ -83,6 +83,12 @@ const LoginPage = () => {
                         fullWidth
                         type="submit"
                         className="text-base font-bold"
+                        sx={{
+                            backgroundColor: 'greener',
+                            '&:hover': {
+                                backgroundColor: 'oranger',
+                            }
+                        }}
                     >
                         {isLoading ? <CircularProgress color="inherit" size="1.4rem" /> : "Se connecter"}
                     </Button>
